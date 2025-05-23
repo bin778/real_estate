@@ -8,8 +8,18 @@
     <script src="main.js" defer></script>
   </head>
   <body>
-    <h1>Real Estate Marketplace</h1>
-    <button onclick="registerProperty()">[관리자] 부동산 등록</button>
-    <div id="properties"></div>
+    <h1>🏠 부동산 마켓</h1>
+
+    <section id="register-section">
+      <h2>📋 새로운 매물 등록 (관리자)</h2>
+      <input id="locationInput" placeholder="위치 (e.x. 서울 마포구)" />
+      <input id="priceInput" type="number" placeholder="가격 (ETH)" />
+      <button onclick="registerProperty()">매물 등록</button>
+    </section>
+
+    <section>
+      <h2>📦 매물 목록</h2>
+      <div id="property-list"></div>
+    </section>
   </body>
 </html>
