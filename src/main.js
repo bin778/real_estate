@@ -3,6 +3,8 @@ import config from './config.js';
 window.registerProperty = registerProperty;
 window.buyProperty = buyProperty;
 window.deleteProperty = deleteProperty;
+window.updateBuyerBalance = updateBuyerBalance;
+window.updateSellerBalance = updateSellerBalance;
 
 let web3 = new Web3(config.WEB3_SERVER);
 let contract;
@@ -159,29 +161,43 @@ const abi = [
 ];
 
 window.addEventListener('load', async () => {
-  const accounts = await web3.eth.getAccounts();
-  contract = new web3.eth.Contract(abi, contractAddress);
-
-  document.getElementById('currentAccount').innerText = `판매자 계정: ${accounts[0]}`;
+  await updateSellerBalance();
   await populateAccountSelector();
+  await updateBuyerBalance();
   loadProperties();
 });
 
+async function updateSellerBalance() {
+  const accounts = await web3.eth.getAccounts();
+  contract = new web3.eth.Contract(abi, contractAddress);
+
+  const seller = accounts[0];
+  const balanceWei = await web3.eth.getBalance(seller);
+  const balanceEth = web3.utils.fromWei(balanceWei, 'ether');
+
+  document.getElementById('currentAccount').innerText = `판매자 계정: ${seller} (💰 ${balanceEth} ETH)`;
+}
+
 async function populateAccountSelector() {
   const accounts = await web3.eth.getAccounts();
-  const seller = accounts[0]; // 판매자 (관리자 계정)
+  const seller = accounts[0];
   const selector = document.getElementById('buyerAccount');
   selector.innerHTML = '';
 
-  // 판매자 계정을 제외하고 옵션 추가
-  accounts
-    .filter((account) => account !== seller)
-    .forEach((account) => {
-      const option = document.createElement('option');
-      option.value = account;
-      option.innerText = account;
-      selector.appendChild(option);
-    });
+  const buyers = accounts.filter((account) => account !== seller);
+  buyers.forEach((account) => {
+    const option = document.createElement('option');
+    option.value = account;
+    option.innerText = account;
+    selector.appendChild(option);
+  });
+}
+
+async function updateBuyerBalance() {
+  const buyer = document.getElementById('buyerAccount').value;
+  const balanceWei = await web3.eth.getBalance(buyer);
+  const balanceEth = web3.utils.fromWei(balanceWei, 'ether');
+  document.getElementById('buyerBalance').innerText = `구매자 잔액: 💰 ${balanceEth} ETH`;
 }
 
 async function registerProperty() {
@@ -219,6 +235,8 @@ async function buyProperty(id, priceWei) {
   try {
     await contract.methods.buyProperty(id).send({ from: buyer, value: priceWei });
     alert('매물 구매 성공!');
+    await updateSellerBalance();
+    await updateBuyerBalance();
     loadProperties();
   } catch (error) {
     console.error(error);
