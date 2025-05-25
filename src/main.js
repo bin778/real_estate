@@ -216,6 +216,8 @@ const registerProperty = async () => {
   try {
     await contract.methods.registerProperty(location, priceWei).send({ from: accounts[0], gas: 300000 });
     alert('매물이 등록되었습니다!');
+    document.getElementById('locationInput').value = '';
+    document.getElementById('priceInput').value = '';
     loadProperties();
   } catch (error) {
     console.error(error);
