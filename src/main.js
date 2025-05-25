@@ -1,5 +1,8 @@
 import config from './config.js';
 
+window.registerProperty = registerProperty;
+window.buyProperty = buyProperty;
+
 let web3 = new Web3(config.WEB3_SERVER);
 let contract;
 const contractAddress = config.CONTRACT_ADDRESS; // Ganache에서 배포한 주소
