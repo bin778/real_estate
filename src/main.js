@@ -1,6 +1,6 @@
 let web3 = new Web3('ws://localhost:7545');
 let contract;
-const contractAddress = 'your_address'; // Ganache에서 배포한 주소
+const contractAddress = '0xA5afB6209f02e35daF20270F5C97C61672e15E4F'; // Ganache에서 배포한 주소
 const abi = [
   {
     inputs: [
@@ -142,8 +142,23 @@ const abi = [
 window.addEventListener('load', async () => {
   const accounts = await web3.eth.getAccounts();
   contract = new web3.eth.Contract(abi, contractAddress);
+
+  document.getElementById('currentAccount').innerText = `판매자 계정: ${accounts[0]}`;
+  await populateAccountSelector();
   loadProperties();
 });
+
+async function populateAccountSelector() {
+  const accounts = await web3.eth.getAccounts();
+  const selector = document.getElementById('buyerAccount');
+  selector.innerHTML = '';
+  accounts.forEach((account) => {
+    const option = document.createElement('option');
+    option.value = account;
+    option.innerText = account;
+    selector.appendChild(option);
+  });
+}
 
 async function registerProperty() {
   const accounts = await web3.eth.getAccounts();
@@ -151,14 +166,26 @@ async function registerProperty() {
   const priceEth = document.getElementById('priceInput').value;
   const priceWei = web3.utils.toWei(priceEth, 'ether');
 
-  await contract.methods.registerProperty(location, priceWei).send({ from: accounts[0], gas: 300000 });
-  loadProperties();
+  try {
+    await contract.methods.registerProperty(location, priceWei).send({ from: accounts[0], gas: 300000 });
+    alert('매물이 등록되었습니다!');
+    loadProperties();
+  } catch (error) {
+    console.error(error);
+    alert('매물 등록 실패');
+  }
 }
 
 async function buyProperty(id, priceWei) {
-  const accounts = await web3.eth.getAccounts();
-  await contract.methods.buyProperty(id).send({ from: accounts[0], value: priceWei });
-  loadProperties();
+  const buyer = document.getElementById('buyerAccount').value;
+  try {
+    await contract.methods.buyProperty(id).send({ from: buyer, value: priceWei });
+    alert('매물 구매 성공!');
+    loadProperties();
+  } catch (error) {
+    console.error(error);
+    alert('구매 실패: 구매자의 금액이 부족합니다');
+  }
 }
 
 async function loadProperties() {
@@ -179,8 +206,8 @@ async function loadProperties() {
       <h3>${location}</h3>
       <p>💰 가격: ${web3.utils.fromWei(price, 'ether')} ETH</p>
       <p>👤 주인: ${owner}</p>
-      <p>🟢 상태: ${available ? '구매 가능' : '팔림'}</p>
-      ${available ? `<button onclick="buyProperty(${i}, '${price}')">Buy</button>` : ''}
+      <p>${available ? '🟢 상태: 구매 가능' : '🔴 상태: 팔림'}</p>
+      ${available ? `<button class="buy-btn" onclick="buyProperty(${i}, '${price}')">구매</button>` : ''}
     `;
     container.appendChild(div);
   }

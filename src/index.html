@@ -1,25 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>Real Estate DApp</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
-    <script src="main.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>부동산 DApp</title>
+    <style>
+      .property {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin: 10px 0;
+      }
+      .buy-btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <h1>🏠 부동산 마켓</h1>
+    <h2>📝 새로운 매물 등록 (판매자)</h2>
+    <input id="locationInput" type="text" placeholder="예: 반포자이" />
+    <input id="priceInput" type="text" placeholder="가격 (ETH)" />
+    <button onclick="registerProperty()">매물 등록</button>
 
-    <section id="register-section">
-      <h2>📋 새로운 매물 등록 (관리자)</h2>
-      <input id="locationInput" placeholder="위치 (e.x. 서울 마포구)" />
-      <input id="priceInput" type="number" placeholder="가격 (ETH)" />
-      <button onclick="registerProperty()">매물 등록</button>
-    </section>
+    <hr />
 
-    <section>
-      <h2>📦 매물 목록</h2>
-      <div id="property-list"></div>
-    </section>
+    <h2>🏠 매물 목록</h2>
+    <label for="buyerAccount">구매자 계정 선택: </label>
+    <select id="buyerAccount"></select>
+    <p id="currentAccount"></p>
+
+    <div id="property-list"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>
