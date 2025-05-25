@@ -1,6 +1,8 @@
-let web3 = new Web3('ws://localhost:7545');
+import config from './config.js';
+
+let web3 = new Web3(config.WEB3_SERVER);
 let contract;
-const contractAddress = '0xA5afB6209f02e35daF20270F5C97C61672e15E4F'; // Ganache에서 배포한 주소
+const contractAddress = config.CONTRACT_ADDRESS; // Ganache에서 배포한 주소
 const abi = [
   {
     inputs: [
