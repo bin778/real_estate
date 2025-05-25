@@ -174,6 +174,19 @@ async function registerProperty() {
   const accounts = await web3.eth.getAccounts();
   const location = document.getElementById('locationInput').value;
   const priceEth = document.getElementById('priceInput').value;
+
+  const numReg = new RegExp(/^(?!0*(\.0+)?$)\d+(\.\d+)?$/);
+
+  if (location === '') {
+    alert('매물 이름을 입력하세요!');
+    return;
+  }
+
+  if (!numReg.test(priceEth)) {
+    alert('제대로 된 숫자를 입력하세요!');
+    return;
+  }
+
   const priceWei = web3.utils.toWei(priceEth, 'ether');
 
   try {
