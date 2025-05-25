@@ -2,6 +2,7 @@ import config from './config.js';
 
 window.registerProperty = registerProperty;
 window.buyProperty = buyProperty;
+window.deleteProperty = deleteProperty;
 
 let web3 = new Web3(config.WEB3_SERVER);
 let contract;
@@ -18,6 +19,19 @@ const abi = [
     name: 'buyProperty',
     outputs: [],
     stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_id',
+        type: 'uint256',
+      },
+    ],
+    name: 'deleteProperty',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -200,6 +214,7 @@ async function registerProperty() {
 }
 
 async function buyProperty(id, priceWei) {
+  if (!confirm('정말로 구매하시겠습니까?')) return;
   const buyer = document.getElementById('buyerAccount').value;
   try {
     await contract.methods.buyProperty(id).send({ from: buyer, value: priceWei });
@@ -211,7 +226,22 @@ async function buyProperty(id, priceWei) {
   }
 }
 
+async function deleteProperty(id) {
+  if (!confirm('정말로 삭제하시겠습니까?')) return;
+  const accounts = await web3.eth.getAccounts();
+  try {
+    await contract.methods.deleteProperty(id).send({ from: accounts[0] });
+    alert('매물이 삭제되었습니다!');
+    loadProperties();
+  } catch (error) {
+    console.error(error);
+    alert('매물 삭제 실패');
+  }
+}
+
 async function loadProperties() {
+  const accounts = await web3.eth.getAccounts();
+  const currentAccount = accounts[0];
   const count = await contract.methods.nextPropertyId().call();
   const container = document.getElementById('property-list');
   container.innerHTML = '';
@@ -225,12 +255,21 @@ async function loadProperties() {
 
     const div = document.createElement('div');
     div.className = 'property';
+
+    // 무효화된 매물은 건너뜀
+    if (owner === '0x0000000000000000000000000000000000000000') continue;
+
     div.innerHTML = `
       <h3>${location}</h3>
       <p>💰 가격: ${web3.utils.fromWei(price, 'ether')} ETH</p>
       <p>👤 주인: ${owner}</p>
       <p>${available ? '🟢 상태: 구매 가능' : '🔴 상태: 팔림'}</p>
       ${available ? `<button class="buy-btn" onclick="buyProperty(${i}, '${price}')">구매</button>` : ''}
+      ${
+        currentAccount.toLowerCase() === owner.toLowerCase()
+          ? `<button class="del-btn" onclick="deleteProperty(${i})">삭제</button>`
+          : ''
+      }
     `;
     container.appendChild(div);
   }

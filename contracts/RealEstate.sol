@@ -40,6 +40,11 @@ contract RealEstate {
         payable(admin).transfer(msg.value);
     }
 
+    function deleteProperty(uint _id) public onlyAdmin {
+        require(_id < nextPropertyId, "Invalid Property ID");
+        delete properties[_id];
+    }
+
     function getProperty(uint _id) public view returns (
         string memory, uint, address, bool
     ) {
