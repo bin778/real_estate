@@ -150,14 +150,19 @@ window.addEventListener('load', async () => {
 
 async function populateAccountSelector() {
   const accounts = await web3.eth.getAccounts();
+  const seller = accounts[0]; // 판매자 (관리자 계정)
   const selector = document.getElementById('buyerAccount');
   selector.innerHTML = '';
-  accounts.forEach((account) => {
-    const option = document.createElement('option');
-    option.value = account;
-    option.innerText = account;
-    selector.appendChild(option);
-  });
+
+  // 판매자 계정을 제외하고 옵션 추가
+  accounts
+    .filter((account) => account !== seller)
+    .forEach((account) => {
+      const option = document.createElement('option');
+      option.value = account;
+      option.innerText = account;
+      selector.appendChild(option);
+    });
 }
 
 async function registerProperty() {
