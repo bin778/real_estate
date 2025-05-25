@@ -1,11 +1,5 @@
 import config from './config.js';
 
-window.registerProperty = registerProperty;
-window.buyProperty = buyProperty;
-window.deleteProperty = deleteProperty;
-window.updateBuyerBalance = updateBuyerBalance;
-window.updateSellerBalance = updateSellerBalance;
-
 let web3 = new Web3(config.WEB3_SERVER);
 let contract;
 const contractAddress = config.CONTRACT_ADDRESS; // Ganache에서 배포한 주소
@@ -167,7 +161,7 @@ window.addEventListener('load', async () => {
   loadProperties();
 });
 
-async function updateSellerBalance() {
+const updateSellerBalance = async () => {
   const accounts = await web3.eth.getAccounts();
   contract = new web3.eth.Contract(abi, contractAddress);
 
@@ -176,9 +170,9 @@ async function updateSellerBalance() {
   const balanceEth = web3.utils.fromWei(balanceWei, 'ether');
 
   document.getElementById('currentAccount').innerText = `판매자 계정: ${seller} (💰 ${balanceEth} ETH)`;
-}
+};
 
-async function populateAccountSelector() {
+const populateAccountSelector = async () => {
   const accounts = await web3.eth.getAccounts();
   const seller = accounts[0];
   const selector = document.getElementById('buyerAccount');
@@ -191,16 +185,16 @@ async function populateAccountSelector() {
     option.innerText = account;
     selector.appendChild(option);
   });
-}
+};
 
-async function updateBuyerBalance() {
+const updateBuyerBalance = async () => {
   const buyer = document.getElementById('buyerAccount').value;
   const balanceWei = await web3.eth.getBalance(buyer);
   const balanceEth = web3.utils.fromWei(balanceWei, 'ether');
   document.getElementById('buyerBalance').innerText = `구매자 잔액: 💰 ${balanceEth} ETH`;
-}
+};
 
-async function registerProperty() {
+const registerProperty = async () => {
   const accounts = await web3.eth.getAccounts();
   const location = document.getElementById('locationInput').value;
   const priceEth = document.getElementById('priceInput').value;
@@ -227,9 +221,9 @@ async function registerProperty() {
     console.error(error);
     alert('매물 등록 실패');
   }
-}
+};
 
-async function buyProperty(id, priceWei) {
+const buyProperty = async (id, priceWei) => {
   if (!confirm('정말로 구매하시겠습니까?')) return;
   const buyer = document.getElementById('buyerAccount').value;
   try {
@@ -242,9 +236,9 @@ async function buyProperty(id, priceWei) {
     console.error(error);
     alert('구매 실패: 구매자의 금액이 부족합니다');
   }
-}
+};
 
-async function deleteProperty(id) {
+const deleteProperty = async (id) => {
   if (!confirm('정말로 삭제하시겠습니까?')) return;
   const accounts = await web3.eth.getAccounts();
   try {
@@ -255,9 +249,9 @@ async function deleteProperty(id) {
     console.error(error);
     alert('매물 삭제 실패');
   }
-}
+};
 
-async function loadProperties() {
+const loadProperties = async () => {
   const accounts = await web3.eth.getAccounts();
   const currentAccount = accounts[0];
   const count = await contract.methods.nextPropertyId().call();
@@ -291,4 +285,11 @@ async function loadProperties() {
     `;
     container.appendChild(div);
   }
-}
+};
+
+// window 함수 명시
+window.registerProperty = registerProperty;
+window.buyProperty = buyProperty;
+window.deleteProperty = deleteProperty;
+window.updateBuyerBalance = updateBuyerBalance;
+window.updateSellerBalance = updateSellerBalance;
