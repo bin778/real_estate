@@ -54,18 +54,18 @@
 ## 실행 예시
 
 ### 매물 등록
-<img src="https://github.com/user-attachments/assets/97fbf5eb-92d5-4e83-a2ae-d0136e32f51d" width="450px" height="400px" />
-<img src="https://github.com/user-attachments/assets/e0c59a93-a343-472d-94ea-60ebb90c0bd5" width="450px" height="400px" />
+<img src="https://github.com/user-attachments/assets/97fbf5eb-92d5-4e83-a2ae-d0136e32f51d" width="600px" height="500px" />
+<img src="https://github.com/user-attachments/assets/e0c59a93-a343-472d-94ea-60ebb90c0bd5" width="600px" height="500px" />
 
 
 ### 매물 구매
-<img src="https://github.com/user-attachments/assets/1773c736-ec80-44de-bfb4-1a0db228a0fc" width="450px" height="400px" />
-<img src="https://github.com/user-attachments/assets/7a496368-6190-49fa-8bc5-0242a94f6a61" width="450px" height="400px" />
+<img src="https://github.com/user-attachments/assets/1773c736-ec80-44de-bfb4-1a0db228a0fc" width="600px" height="500px" />
+<img src="https://github.com/user-attachments/assets/7a496368-6190-49fa-8bc5-0242a94f6a61" width="600px" height="500px" />
 
 
 ## 매물 삭제
-<img src="https://github.com/user-attachments/assets/9e58b19d-51d1-4771-ac1c-bae4eb278e1d" width="450px" height="400px" />
-<img src="https://github.com/user-attachments/assets/e934ae8f-8df0-4667-a64a-57cf852a67a4" width="450px" height="400px" />
+<img src="https://github.com/user-attachments/assets/9e58b19d-51d1-4771-ac1c-bae4eb278e1d" width="600px" height="500px" />
+<img src="https://github.com/user-attachments/assets/e934ae8f-8df0-4667-a64a-57cf852a67a4" width="600px" height="500px" />
 
 
 
